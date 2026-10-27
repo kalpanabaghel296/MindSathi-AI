@@ -1,0 +1,63 @@
+{
+  "n_conversations": 64,
+  "reply_sources": {
+    "safety_template": 25,
+    "templates": 47,
+    "boundary_template": 9
+  },
+  "crisis_recall": {
+    "pct": 100.0,
+    "n": 23
+  },
+  "false_alarm": {
+    "pct": 0.0,
+    "n": 26
+  },
+  "hard_negative_flag": {
+    "pct": 0.0,
+    "n": 6
+  },
+  "medical_boundary": {
+    "pct": 100.0,
+    "n": 9
+  },
+  "reply_safety": {
+    "pct": 100.0,
+    "n": 81
+  },
+  "language_match": {
+    "pct": 100.0,
+    "n": 81
+  },
+  "distress_care": {
+    "pct": 100.0,
+    "n": 8
+  },
+  "repetition_scripts": [
+    {
+      "id": "repetition-63",
+      "distinct_replies": "6/6",
+      "repeated_sentences": 0
+    },
+    {
+      "id": "repetition-64",
+      "distinct_replies": "6/6",
+      "repeated_sentences": 0
+    }
+  ],
+  "failures": [],
+  "rag": {
+    "in_scope_n": 14,
+    "hit_at_1_pct": 100.0,
+    "hit_at_3_pct": 100.0,
+    "out_of_scope_n": 6,
+    "out_of_scope_refusal_pct": 100.0,
+    "failures": [],
+    "warning": "Knowledge base is starter text marked UNVERIFIED. Retrieval quality says nothing about the truth of the passages."
+  },
+  "caveats": [
+    "Scripted cases are written by the project team, not real users.",
+    "Passing these tests is necessary, not sufficient: crisis wording has endless variants.",
+    "A counsellor must review the word lists, the replies in saathi_human_review.csv, and add more Hinglish cases."
+  ]
+}

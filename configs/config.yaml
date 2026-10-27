@@ -1,0 +1,86 @@
+# ---------------------------------------------------------------------------
+# Central configuration. Paths are relative to the project root unless absolute.
+# Put the three raw inputs in data/raw/ (or change raw_dir). The raw files are
+# NOT shipped inside the project ZIP.
+# Override the config file with:  export DEPRESSION_CONFIG=/path/to/other.yaml
+# ---------------------------------------------------------------------------
+paths:
+  raw_dir: data/raw
+  parquet_file: anon_processed_df_parquet
+  tsv_file: Feature explanations.tsv
+  studentlife_zip: "archive (2).zip"
+  wesad_dir: /path/to/WESAD          # <-- set to your local WESAD folder (contains S2/, S3/, ...)
+  reports_dir: reports
+  outputs_dir: outputs
+
+seed: 42
+
+primary:
+  id_separator: "_"                  # row index looks like <participantID>_<period>
+  target_score: phq9_score_end       # PHQ-9 total at the END of the 3-month period (0-27)
+  baseline_score: phq9_score_start   # PHQ-9 total at the START of the period (allowed as baseline input)
+  binary_threshold: 10               # standard PHQ-9 screening cut-off (>=10), computed from the SCORE
+  phq9_bands: [5, 10, 15, 20]        # standard severity band edges used to validate the category columns
+  # Outcome-period columns / outcome-derived columns: never inputs
+  drop_always: [phq9_score_end, phq9_cat_end, phq9_cat_start]
+  # Used only for fairness reporting, NOT as model inputs (can be changed here)
+  sensitive: [sex, race_white, race_black, race_hispanic, race_asian, race_other]
+  # Features whose time window relative to the questionnaire dates is undocumented
+  # ("last 4 days", "last 7 days", "past month"). Kept OUT of the main feature set;
+  # exported separately as a sensitivity set.
+  timing_uncertain:
+    - steps_mvpa_sum_recent
+    - steps_lpa_sum_recent
+    - steps_rolling_6_median_recent
+    - steps_rolling_6_max_recent
+    - sleep_asleep_mean_recent
+    - sleep_in_bed_mean_recent
+    - sleep_ratio_asleep_in_bed_mean_recent
+    - steps__active_day_count_
+    - steps__sedentary_day_count_
+    - sleep__hypersomnia_count_
+    - sleep__hyposomnia_count_
+    - med_start
+    - med_stop
+    - med_dose
+    - nonmed_start
+    - nonmed_stop
+    - med_nonmed_dnu
+    - life_meditation
+    - life_stress
+    - life_activity_eating
+    - life_red_stop_alcoh
+  invalid_rules:
+    min_adult_weight_lb: 80          # weights below this are impossible for adults (BMI < 5 in all 20 cases)
+    sleep_nonwear_if_zero: true      # asleep == 0 AND in-bed == 0 -> device not worn, set to missing
+  split:                             # participant-wise, stratified on the binary target
+    n_folds: 20
+    train_folds: 14
+    val_folds: 3
+    test_folds: 3
+  preprocess:
+    clip_quantiles: [0.005, 0.995]   # learned on TRAIN only
+    indicator_min_missing: 0.05      # add a missing-indicator when train missing rate > 5%
+    corr_threshold: 0.98             # drop near-duplicate columns (learned on TRAIN only)
+
+temporal:                            # EXPERIMENTAL: uses only strictly earlier periods of the same participant
+  enabled: true
+  min_history: 2
+  features:
+    - steps_awake_mean
+    - sleep_asleep_weekday_mean
+    - sleep_in_bed_weekday_mean
+    - sleep_ratio_asleep_in_bed_weekday_mean
+    - sleep_main_start_hour_adj_median
+
+wesad:
+  window_sec: 60
+  step_sec: 30
+  label_purity: 0.80                 # a window is kept only if >=80% of its samples share one label
+  labels_keep: [1, 2, 3]             # 1=baseline 2=stress 3=amusement (4=meditation, 0/5/6/7 ignored)
+  max_nan_fraction: 0.20
+  nominal_label_fs: 700
+  out_dir: outputs/wesad
+
+studentlife:
+  out_dir: outputs/studentlife

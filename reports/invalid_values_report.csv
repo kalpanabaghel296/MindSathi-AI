@@ -1,0 +1,12 @@
+check,n_rows,action
+weight < min adult weight,20,set weight & bmi to missing
+bmi > 60 (plausible severe obesity),178,"kept, flagged only"
+bmi < 14,20,same rows as low weight
+bmi differs from 703*weight/height^2 by > 1,0,"none found: bmi is derived, redundant"
+sleep asleep == 0 and in-bed == 0 (weekday),1206,treated as device non-wear -> missing
+steps_awake_mean < 500,20,"kept, flagged (may be non-wear)"
+steps_awake_mean > 40000,26,"kept, flagged (extreme but possible)"
+asleep minutes > in-bed minutes (weekday),0,none found
+sleep ratio > 1,0,none found
+negative steps,0,none found
+sleep start hour > 32 or < 15 (adjusted scale),266,"kept, flagged"

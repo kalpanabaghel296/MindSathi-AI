@@ -1,0 +1,51 @@
+{
+  "n_rows": 35694,
+  "n_feature_columns": 154,
+  "n_participants": 4948,
+  "periods_per_participant": {
+    "count": 4948.0,
+    "mean": 7.213823767178658,
+    "std": 3.9284014140829324,
+    "min": 1.0,
+    "25%": 3.0,
+    "50%": 8.0,
+    "75%": 11.0,
+    "max": 12.0
+  },
+  "period_values": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "labelled_rows": 10866,
+  "labelled_participants": 4036,
+  "participants_with_>=2_labelled_rows": 3107,
+  "participants_without_any_label": 912,
+  "label_period_distribution": {
+    "3": 3244,
+    "6": 2832,
+    "9": 2732,
+    "12": 2058
+  },
+  "category_matches_standard_bands": {
+    "phq9_cat_start": 1.0,
+    "phq9_cat_end": 1.0
+  },
+  "tsv_names_missing_in_parquet": [],
+  "parquet_columns_missing_in_tsv": [],
+  "tsv_rows_without_description": 84,
+  "exact_duplicate_rows": 0,
+  "duplicate_feature_vectors": 0,
+  "constant_columns": [],
+  "n_corr_pairs_over_threshold": 4,
+  "columns_over_50pct_missing": 10
+}

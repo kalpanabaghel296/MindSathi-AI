@@ -1,0 +1,46 @@
+{
+  "archive": "archive (2).zip",
+  "identified_as": "StudentLife (Dartmouth): per-user u00..u59 phone sensing, EMA, surveys, app usage, calls, SMS",
+  "entries": 1984,
+  "uncompressed_GB": 3.04,
+  "sensing_headers": {
+    "sensing/activity": "timestamp, activity inference",
+    "sensing/audio": "timestamp, audio inference",
+    "sensing/bluetooth": "time,MAC,class_id,level",
+    "sensing/conversation": "start_timestamp, end_timestamp",
+    "sensing/dark": "start,end",
+    "sensing/gps": "time,provider,network_type,accuracy,latitude,longitude,altitude,bearing,speed,travelstate",
+    "sensing/phonecharge": "start,end",
+    "sensing/phonelock": "start,end",
+    "sensing/wifi": "time,BSSID,freq,level",
+    "sensing/wifi_location": "time,location"
+  },
+  "survey_files": [
+    "dataset/survey/BigFive.csv",
+    "dataset/survey/FlourishingScale.csv",
+    "dataset/survey/LonelinessScale.csv",
+    "dataset/survey/PHQ-9.csv",
+    "dataset/survey/PerceivedStressScale.csv",
+    "dataset/survey/panas.csv",
+    "dataset/survey/psqi.csv",
+    "dataset/survey/vr_12.csv"
+  ],
+  "phq9": {
+    "responses": 84,
+    "participants": 46,
+    "pre_responses": 46,
+    "post_responses": 38,
+    "participants_with_pre_and_post": 38,
+    "incomplete_responses": 0,
+    "pre_mean": 5.521739130434782,
+    "post_mean": 6.2631578947368425,
+    "pre_ge10": 8,
+    "post_ge10": 7
+  },
+  "merge_with_primary": "NO - different population, sensors, features, label timing and scale of labels",
+  "gaps": [
+    "no demographic file in the archive",
+    "PHQ-9 only pre/post (46 participants) - cannot support model training",
+    "sensing streams not parsed in this pipeline"
+  ]
+}

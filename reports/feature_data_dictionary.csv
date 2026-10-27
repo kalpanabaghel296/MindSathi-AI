@@ -1,0 +1,155 @@
+feature,tsv_category,tsv_subcategory,tsv_description,tsv_notes,in_parquet,dtype,pct_missing,n_unique,role,has_description,is_constant,raw_or_engineered
+sex,Demographic,Static,Sex,"0=female, 1=male, 2=other",True,int64,0.0,3,sensitive_fairness_only,True,False,engineered_aggregate_or_static
+race_white,Demographic,Static,"Race, white",,True,bool,0.0,2,sensitive_fairness_only,True,False,engineered_aggregate_or_static
+race_black,Demographic,Static,"Race, black",,True,bool,0.0,2,sensitive_fairness_only,True,False,engineered_aggregate_or_static
+race_hispanic,Demographic,Static,"Race, hispanic",,True,bool,0.0,2,sensitive_fairness_only,True,False,engineered_aggregate_or_static
+race_asian,Demographic,Static,"Race, asian",,True,bool,0.0,2,sensitive_fairness_only,True,False,engineered_aggregate_or_static
+race_other,Demographic,Static,"Race, other",,True,bool,0.0,2,sensitive_fairness_only,True,False,engineered_aggregate_or_static
+birthyear,Demographic,Static,Birth year,,True,int64,0.0,57,model_candidate,True,False,engineered_aggregate_or_static
+educ,Demographic,Static,Education level,higher = more education,True,float64,0.095,7,model_candidate,True,False,engineered_aggregate_or_static
+height,Demographic,Static,"Height, in inches",,True,float64,0.053,53,model_candidate,True,False,engineered_aggregate_or_static
+weight,Demographic,Static,"Weight, in lbs",,True,float64,0.011,290,model_candidate,True,False,engineered_aggregate_or_static
+bmi,Demographic,Static,BMI,calculated with height and weight using formula,True,float64,0.064,2489,model_candidate,True,False,engineered_aggregate_or_static
+pregnant,Demographic,Static,"Pregnant, at baseline",boolean,True,float64,0.507,2,model_candidate,True,False,engineered_aggregate_or_static
+birth,Demographic,Static,"Given birth, past year",boolean,True,float64,0.28,2,model_candidate,True,False,engineered_aggregate_or_static
+trauma,Demographic,Static,"Experienced trauma resulting in injury (e.g. accident, fall), past year",boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+insurance,Demographic,Static,Has health insurance,boolean,True,float64,0.74,2,model_candidate,True,False,engineered_aggregate_or_static
+money,Demographic,Static,"Sufficient money, past month",higher = worse off,True,float64,0.361,5,model_candidate,True,False,engineered_aggregate_or_static
+money_assistance,Demographic,Static,"Money assistance from government, past month",boolean,True,float64,0.754,2,model_candidate,True,False,engineered_aggregate_or_static
+household,Demographic,Static,Number of individuals in household,integer,True,float64,0.0,9,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_cancer,Demographic,Static,Diagnosed: cancer,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_diabetes_typ1,Demographic,Static,Diagnosed: type 1 diabetes,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_diabetes_typ2,Demographic,Static,Diagnosed: type 2 diabetes,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_gout,Demographic,Static,Diagnosed: gout,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_migraines,Demographic,Static,Diagnosed: migraines,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_ms,Demographic,Static,Diagnosed: multiple sclerosis,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_osteoporosis,Demographic,Static,Diagnosed: osteoporosis,boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_neuropathic,Demographic,Static,"Diagnosed: fibromyalgia, peripheral neuropathic pain, central neuropathic pain (sum)",0-3,True,float64,0.0,4,model_candidate,True,False,engineered_aggregate_or_static
+comorbid_arthritis,Demographic,Static,"Diagnosed: osteoarthritis, rheumatoid arthritis (sum)",0-2,True,float64,0.0,3,model_candidate,True,False,engineered_aggregate_or_static
+num_migraine_days,Demographic,Static,"Number of migraines days, per month, on average","categories, check questionnaire for mapping",True,float64,0.0,6,model_candidate,True,False,engineered_aggregate_or_static
+meds_migraine,Demographic,Static,"Takes daily prescription migraine medication, at baseline",boolean,True,float64,0.0,2,model_candidate,True,False,engineered_aggregate_or_static
+med_start,Demographic,Dynamic,"Started a new medication, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+med_stop,Demographic,Dynamic,"Stopped a medication, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+med_dose,Demographic,Dynamic,"Changed dosage of at least one medication, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+nonmed_start,Demographic,Dynamic,"Started new non-medication therapy, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+nonmed_stop,Demographic,Dynamic,"Stopped non-medication therapy, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+med_nonmed_dnu,Demographic,Dynamic,Do not take medication/non-medication therapies,,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+life_meditation,Demographic,Dynamic,"Started meditation/other relaxation techniques, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+life_stress,Demographic,Dynamic,"Reduced stress-inducing activities, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+life_activity_eating,Demographic,Dynamic,"Increased physical activity or improved eating habits, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+life_red_stop_alcoh,Demographic,Dynamic,"Reduced or stopped alcohol consumption, past month",,True,int64,0.0,2,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps_awake_mean,Steps,Statistics,Mean number of steps taken while awake,,True,float64,0.056,33770,model_candidate,True,False,engineered_aggregate_or_static
+steps_mvpa_iqr,Steps,Statistics,IQR of number of minutes with MVPA-range steps,,True,float64,86.292,352,model_candidate,True,False,engineered_aggregate_or_static
+steps_lpa_iqr,Steps,Statistics,IQR of number of minutes with LPA-range steps,,True,float64,38.208,562,model_candidate,True,False,engineered_aggregate_or_static
+steps_awake_sum_iqr,Steps,Statistics,IQR of number of steps taken while awake,,True,float64,31.554,16022,model_candidate,True,False,engineered_aggregate_or_static
+steps__active_day_count_,Steps,Statistics,"Number of days with >10k steps, last 7 days",,True,int64,0.0,8,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps__sedentary_day_count_,Steps,Statistics,"Number of days with <5k steps, last 7 days",,True,int64,0.0,8,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps_mvpa_sum_recent,Steps,Statistics,"Number of MVPA-range step minutes, last 4 days",,True,float64,0.0,580,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps_lpa_sum_recent,Steps,Statistics,"Number of LPA-range step minutes, last 4 days",,True,float64,0.0,806,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps_rolling_6_median_recent,Steps,Statistics,"Median number of 6 minute rolling number of steps, last 4 days",,True,float64,0.331,2029,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps_rolling_6_max_recent,Steps,Statistics,"Max number of 6 minute rolling number of steps, last 4 days",,True,float64,0.331,1185,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+steps__awake__sum__score,Steps,Linear regression,,,True,float64,0.28,35594,model_candidate,False,False,engineered_regression_aggregate
+steps__awake__sum__intercept,Steps,Linear regression,,,True,float64,0.28,35448,model_candidate,False,False,engineered_regression_aggregate
+steps__awake__sum__coeff,Steps,Linear regression,,,True,float64,0.28,35455,model_candidate,False,False,engineered_regression_aggregate
+steps__mvpa__sum__score,Steps,Linear regression,,,True,float64,22.696,27545,model_candidate,False,False,engineered_regression_aggregate
+steps__mvpa__sum__intercept,Steps,Linear regression,,,True,float64,22.696,26347,model_candidate,False,False,engineered_regression_aggregate
+steps__mvpa__sum__coeff,Steps,Linear regression,,,True,float64,22.696,26521,model_candidate,False,False,engineered_regression_aggregate
+steps__light_activity__sum__score,Steps,Linear regression,,,True,float64,0.734,35403,model_candidate,False,False,engineered_regression_aggregate
+steps__light_activity__sum__intercept,Steps,Linear regression,,,True,float64,0.734,24960,model_candidate,False,False,engineered_regression_aggregate
+steps__light_activity__sum__coeff,Steps,Linear regression,,,True,float64,0.734,26245,model_candidate,False,False,engineered_regression_aggregate
+steps__rolling_6_sum__max__score,Steps,Linear regression,,,True,float64,0.277,35582,model_candidate,False,False,engineered_regression_aggregate
+steps__rolling_6_sum__max__intercept,Steps,Linear regression,,,True,float64,0.277,32735,model_candidate,False,False,engineered_regression_aggregate
+steps__rolling_6_sum__max__coeff,Steps,Linear regression,,,True,float64,0.277,33058,model_candidate,False,False,engineered_regression_aggregate
+steps__streaks__countDistinct__score,Steps,Linear regression,,,True,float64,0.0,35613,model_candidate,False,False,engineered_regression_aggregate
+steps__streaks__countDistinct__intercept,Steps,Linear regression,,,True,float64,0.0,23620,model_candidate,False,False,engineered_regression_aggregate
+steps__streaks__countDistinct__coeff,Steps,Linear regression,,,True,float64,0.0,24444,model_candidate,False,False,engineered_regression_aggregate
+steps__not_moving__sum__score,Steps,Linear regression,,,True,float64,0.031,35660,model_candidate,False,False,engineered_regression_aggregate
+steps__not_moving__sum__intercept,Steps,Linear regression,,,True,float64,0.031,33244,model_candidate,False,False,engineered_regression_aggregate
+steps__not_moving__sum__coeff,Steps,Linear regression,,,True,float64,0.031,33954,model_candidate,False,False,engineered_regression_aggregate
+steps__awake__sum__score_,Steps,Linear regression,,,True,float64,20.547,28357,model_candidate,False,False,engineered_regression_aggregate
+steps__awake__sum__intercept_,Steps,Linear regression,,,True,float64,20.547,28125,model_candidate,False,False,engineered_regression_aggregate
+steps__awake__sum__coeff_,Steps,Linear regression,,,True,float64,20.547,27057,model_candidate,False,False,engineered_regression_aggregate
+steps__mvpa__sum__score_,Steps,Linear regression,,,True,float64,75.822,8475,model_candidate,False,False,engineered_regression_aggregate
+steps__mvpa__sum__intercept_,Steps,Linear regression,,,True,float64,75.822,5533,model_candidate,False,False,engineered_regression_aggregate
+steps__mvpa__sum__coeff_,Steps,Linear regression,,,True,float64,75.822,2833,model_candidate,False,False,engineered_regression_aggregate
+steps__light_activity__sum__score_,Steps,Linear regression,,,True,float64,25.537,26208,model_candidate,False,False,engineered_regression_aggregate
+steps__light_activity__sum__intercept_,Steps,Linear regression,,,True,float64,25.537,11962,model_candidate,False,False,engineered_regression_aggregate
+steps__light_activity__sum__coeff_,Steps,Linear regression,,,True,float64,25.537,4610,model_candidate,False,False,engineered_regression_aggregate
+steps__rolling_6_sum__max__score_,Steps,Linear regression,,,True,float64,20.48,28345,model_candidate,False,False,engineered_regression_aggregate
+steps__rolling_6_sum__max__intercept_,Steps,Linear regression,,,True,float64,20.48,23896,model_candidate,False,False,engineered_regression_aggregate
+steps__rolling_6_sum__max__coeff_,Steps,Linear regression,,,True,float64,20.48,13987,model_candidate,False,False,engineered_regression_aggregate
+steps__streaks__countDistinct__score_,Steps,Linear regression,,,True,float64,20.185,28164,model_candidate,False,False,engineered_regression_aggregate
+steps__streaks__countDistinct__intercept_,Steps,Linear regression,,,True,float64,20.185,12526,model_candidate,False,False,engineered_regression_aggregate
+steps__streaks__countDistinct__coeff_,Steps,Linear regression,,,True,float64,20.185,4252,model_candidate,False,False,engineered_regression_aggregate
+steps__not_moving__sum__score_,Steps,Linear regression,,,True,float64,20.267,28455,model_candidate,False,False,engineered_regression_aggregate
+steps__not_moving__sum__intercept_,Steps,Linear regression,,,True,float64,20.267,24897,model_candidate,False,False,engineered_regression_aggregate
+steps__not_moving__sum__coeff_,Steps,Linear regression,,,True,float64,20.267,16900,model_candidate,False,False,engineered_regression_aggregate
+sleep_asleep_weekday_mean,Sleep,Statistics,Mean number of minutes asleep per night on weekdays,,True,float64,1.023,11190,model_candidate,True,False,engineered_aggregate_or_static
+sleep_asleep_weekend_mean,Sleep,Statistics,Mean number of minutes asleep per night on weekends,,True,float64,3.903,1574,model_candidate,True,False,engineered_aggregate_or_static
+sleep_in_bed_weekday_mean,Sleep,Statistics,Mean number of minutes in bed per night on weekdays,,True,float64,1.023,10643,model_candidate,True,False,engineered_aggregate_or_static
+sleep_in_bed_weekend_mean,Sleep,Statistics,Mean number of minutes in bed per night on weekends,,True,float64,3.903,1699,model_candidate,True,False,engineered_aggregate_or_static
+sleep_ratio_asleep_in_bed_weekday_mean,Sleep,Statistics,Mean ratio between number of minutes asleep / in bed on weekdays,,True,float64,4.401,33935,model_candidate,True,False,engineered_aggregate_or_static
+sleep_ratio_asleep_in_bed_weekend_mean,Sleep,Statistics,Mean ratio between number of minutes asleep / in bed on weekends,,True,float64,9.621,30844,model_candidate,True,False,engineered_aggregate_or_static
+sleep_in_bed_iqr,Sleep,Statistics,IQR of minutes in bed per night,,True,float64,37.726,1755,model_candidate,True,False,engineered_aggregate_or_static
+sleep_asleep_iqr,Sleep,Statistics,IQR of minutes asleep per night,,True,float64,37.726,1617,model_candidate,True,False,engineered_aggregate_or_static
+sleep_ratio_asleep_in_bed_iqr,Sleep,Statistics,IQR of ratio between number of minutes asleep / in bed,,True,float64,56.486,15494,model_candidate,True,False,engineered_aggregate_or_static
+sleep_main_start_hour_adj_median,Sleep,Statistics,Median start hour of main sleep,0-30+ (adjusted so that 4am next day = 28),True,float64,4.172,47,model_candidate,True,False,engineered_aggregate_or_static
+sleep_main_start_hour_adj_iqr,Sleep,Statistics,IQR of start hour of main sleep,,True,float64,56.486,71,model_candidate,True,False,engineered_aggregate_or_static
+sleep_main_start_hour_adj_range,Sleep,Statistics,Max start hour of main sleep - min start hour of main sleep,,True,float64,4.172,5,model_candidate,True,False,engineered_aggregate_or_static
+sleep__hypersomnia_count_,Sleep,Statistics,"Number of nights with >10 hours asleep, last 7 days",,True,int64,0.0,8,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+sleep__hyposomnia_count_,Sleep,Statistics,"Number of nights with <5 hours asleep, last 7 days",,True,int64,0.0,8,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+sleep_asleep_mean_recent,Sleep,Statistics,"Mean number of minutes asleep per night, last 4 days",,True,float64,1.633,3410,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+sleep_in_bed_mean_recent,Sleep,Statistics,"Mean number of minutes in bed per night, last 4 days",,True,float64,1.633,3530,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+sleep_ratio_asleep_in_bed_mean_recent,Sleep,Statistics,"Mean ratio between number of minutes asleep / in bed, last 4 days",,True,float64,7.018,32894,timing_uncertain_sensitivity_set,True,False,engineered_aggregate_or_static
+sleep__main_start_hour_adj__score,Sleep,Linear regression,,,True,float64,9.806,26949,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_start_hour_adj__intercept,Sleep,Linear regression,,,True,float64,9.806,18165,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_start_hour_adj__coeff,Sleep,Linear regression,,,True,float64,9.806,17994,model_candidate,False,False,engineered_regression_aggregate
+sleep__nap_count__score,Sleep,Linear regression,,,True,float64,9.806,9709,model_candidate,False,False,engineered_regression_aggregate
+sleep__nap_count__intercept,Sleep,Linear regression,,,True,float64,9.806,9779,model_candidate,False,False,engineered_regression_aggregate
+sleep__nap_count__coeff,Sleep,Linear regression,,,True,float64,9.806,10715,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_asleep_minutes__score,Sleep,Linear regression,,,True,float64,2.23,33807,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_asleep_minutes__intercept,Sleep,Linear regression,,,True,float64,2.23,29846,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_asleep_minutes__coeff,Sleep,Linear regression,,,True,float64,2.23,30958,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_efficiency__score,Sleep,Linear regression,,,True,float64,9.806,31256,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_efficiency__intercept,Sleep,Linear regression,,,True,float64,9.806,19836,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_efficiency__coeff,Sleep,Linear regression,,,True,float64,9.806,20515,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake__sum__score,Sleep,Linear regression,,,True,float64,9.806,32143,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake__sum__intercept,Sleep,Linear regression,,,True,float64,9.806,24232,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake__sum__coeff,Sleep,Linear regression,,,True,float64,9.806,26481,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_in_bed_minutes__score,Sleep,Linear regression,,,True,float64,2.23,33782,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_in_bed_minutes__intercept,Sleep,Linear regression,,,True,float64,2.23,29980,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_in_bed_minutes__coeff,Sleep,Linear regression,,,True,float64,2.23,31617,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake_regions__countDistinct__score,Sleep,Linear regression,,,True,float64,9.806,31538,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake_regions__countDistinct__intercept,Sleep,Linear regression,,,True,float64,9.806,19789,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake_regions__countDistinct__coeff,Sleep,Linear regression,,,True,float64,9.806,20057,model_candidate,False,False,engineered_regression_aggregate
+sleep_ratio_asleep_in_bed__score,Sleep,Linear regression,,,True,float64,9.806,32167,model_candidate,False,False,engineered_regression_aggregate
+sleep_ratio_asleep_in_bed__intercept,Sleep,Linear regression,,,True,float64,9.806,32167,model_candidate,False,False,engineered_regression_aggregate
+sleep_ratio_asleep_in_bed__coeff,Sleep,Linear regression,,,True,float64,9.806,32177,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_start_hour_adj__score_,Sleep,Linear regression,,,True,float64,43.223,4906,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_start_hour_adj__intercept_,Sleep,Linear regression,,,True,float64,43.223,2373,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_start_hour_adj__coeff_,Sleep,Linear regression,,,True,float64,43.223,773,model_candidate,False,False,engineered_regression_aggregate
+sleep__nap_count__score_,Sleep,Linear regression,,,True,float64,43.223,330,model_candidate,False,False,engineered_regression_aggregate
+sleep__nap_count__intercept_,Sleep,Linear regression,,,True,float64,43.223,437,model_candidate,False,False,engineered_regression_aggregate
+sleep__nap_count__coeff_,Sleep,Linear regression,,,True,float64,43.223,151,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_asleep_minutes__score_,Sleep,Linear regression,,,True,float64,25.833,25775,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_asleep_minutes__intercept_,Sleep,Linear regression,,,True,float64,25.833,20121,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_asleep_minutes__coeff_,Sleep,Linear regression,,,True,float64,25.833,10938,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_efficiency__score_,Sleep,Linear regression,,,True,float64,43.223,11784,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_efficiency__intercept_,Sleep,Linear regression,,,True,float64,43.223,4128,model_candidate,False,False,engineered_regression_aggregate
+sleep__main_efficiency__coeff_,Sleep,Linear regression,,,True,float64,43.223,1569,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake__sum__score_,Sleep,Linear regression,,,True,float64,43.243,19948,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake__sum__intercept_,Sleep,Linear regression,,,True,float64,43.243,8962,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake__sum__coeff_,Sleep,Linear regression,,,True,float64,43.243,4637,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_in_bed_minutes__score_,Sleep,Linear regression,,,True,float64,25.833,25751,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_in_bed_minutes__intercept_,Sleep,Linear regression,,,True,float64,25.833,20453,model_candidate,False,False,engineered_regression_aggregate
+sleep__total_in_bed_minutes__coeff_,Sleep,Linear regression,,,True,float64,25.833,12000,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake_regions__countDistinct__score_,Sleep,Linear regression,,,True,float64,43.243,12447,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake_regions__countDistinct__intercept_,Sleep,Linear regression,,,True,float64,43.243,3639,model_candidate,False,False,engineered_regression_aggregate
+sleep__awake_regions__countDistinct__coeff_,Sleep,Linear regression,,,True,float64,43.243,1061,model_candidate,False,False,engineered_regression_aggregate
+sleep_ratio_asleep_in_bed__score_,Sleep,Linear regression,,,True,float64,43.223,20234,model_candidate,False,False,engineered_regression_aggregate
+sleep_ratio_asleep_in_bed__intercept_,Sleep,Linear regression,,,True,float64,43.223,20244,model_candidate,False,False,engineered_regression_aggregate
+sleep_ratio_asleep_in_bed__coeff_,Sleep,Linear regression,,,True,float64,43.223,20240,model_candidate,False,False,engineered_regression_aggregate
+phq9_cat_end,PHQ-9,PHQ-9 category,PHQ-9 category at the end of the 3 month period,0-4,True,float64,69.558,5,excluded_outcome_period,True,False,questionnaire_outcome
+phq9_cat_start,PHQ-9,PHQ-9 category,PHQ-9 category at the start of the 3 month period,0-4,True,float64,69.558,5,excluded_outcome_period,True,False,questionnaire_outcome
+phq9_score_end,PHQ-9,PHQ-9 score,PHQ-9 score at the end of the 3 month period,0-27,True,float64,69.558,28,excluded_outcome_period,True,False,questionnaire_outcome
+phq9_score_start,PHQ-9,PHQ-9 score,PHQ-9 score at the start of the 3 month period,0-27,True,float64,69.558,28,baseline_input_stored_with_labels,True,False,questionnaire_outcome

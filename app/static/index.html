@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saathi · wellbeing dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="shell">
+  <nav class="rail" aria-label="Main">
+    <div class="brand"><span class="orb sm" aria-hidden="true"></span><div><b>Saathi</b><small>wellbeing companion</small></div></div>
+    <button class="nav on" data-view="today">Today</button>
+    <button class="nav" data-view="talk">Talk to Saathi</button>
+    <button class="nav" data-view="insights">Risk insights</button>
+    <button class="nav" data-view="help">Help now</button>
+    <button class="nav" data-view="privacy">Privacy and data</button>
+    <p class="rail-note">Saathi is an AI. It is not a doctor or therapist and never gives a diagnosis.</p>
+  </nav>
+
+  <main id="main">
+    <!-- TODAY -->
+    <section class="view on" id="v-today">
+      <header class="page-head"><h1 id="greet">Hello</h1><p>A two-tap check-in helps you notice patterns in your own days.</p></header>
+      <div class="grid2">
+        <div class="card">
+          <h2>How are you today?</h2>
+          <fieldset class="scale" id="mood"><legend>Mood</legend></fieldset>
+          <fieldset class="scale" id="lonely"><legend>How lonely do you feel?</legend></fieldset>
+          <div class="row"><button class="btn" id="saveCheck">Save today’s check-in</button><span id="saveMsg" role="status"></span></div>
+        </div>
+        <div class="card">
+          <h2>Your last two weeks</h2>
+          <div id="chart" class="chart" aria-label="Mood and loneliness over the last 14 days"></div>
+          <div class="legend"><span><i class="k mood"></i>Mood (higher is better)</span><span><i class="k lone"></i>Loneliness (lower is better)</span></div>
+          <p id="trendNote" class="note"></p>
+        </div>
+      </div>
+      <div class="card talk-cta"><span class="orb" aria-hidden="true"></span>
+        <div><h2>Want to talk it through?</h2><p>Saathi listens first. Hindi, English and Hinglish are fine.</p></div>
+        <button class="btn" data-view="talk">Start talking</button></div>
+    </section>
+
+    <!-- TALK -->
+    <section class="view" id="v-talk">
+      <header class="page-head"><h1>Talk to Saathi</h1><p>Your messages are not saved on the server. Closing this page clears the chat.</p></header>
+      <div class="chat card">
+        <div class="chat-top"><span class="orb" aria-hidden="true"></span>
+          <div><b>Saathi</b><small>AI companion · listens first</small></div>
+          <label class="tog"><input type="checkbox" id="speak"> Read replies aloud</label></div>
+        <div id="log" class="log" role="log" aria-live="polite"></div>
+        <div class="chips" id="chips">
+          <button>I feel lonely</button><button>I can’t sleep well</button><button>Mujhe bahut tension hai</button><button>I just want to talk</button>
+        </div>
+        <div class="composer">
+          <button class="icon" id="mic" title="Speak instead of typing" aria-label="Speak instead of typing" hidden>Mic</button>
+          <textarea id="msg" rows="1" placeholder="Write here… (हिंदी, English, Hinglish)" aria-label="Your message"></textarea>
+          <button class="btn" id="send">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section class="view" id="v-insights">
+      <header class="page-head"><h1>Risk insights</h1><p>A screening indicator from wearable-style data. It is not a diagnosis.</p></header>
+      <div id="insights"></div>
+    </section>
+
+    <!-- HELP -->
+    <section class="view" id="v-help">
+      <header class="page-head"><h1>Help now</h1><p>If you are in danger or thinking about hurting yourself, please reach a real person right away.</p></header>
+      <div class="grid2">
+        <div class="card urgent"><h2>Call for support</h2>
+          <a class="call" href="tel:14416"><b>Tele-MANAS</b><span>14416</span></a>
+          <a class="call" href="tel:18008914416"><b>Tele-MANAS (toll-free)</b><span>1-800-891-4416</span></a>
+          <a class="call em" href="tel:112"><b>Emergency</b><span>112</span></a>
+          <p class="note">Free, 24x7, many languages. Numbers checked online on 21 Oct 2026; please re-verify before relying on them.</p></div>
+        <div class="card"><h2>A slow-breathing minute</h2>
+          <div class="breath"><span class="orb big" aria-hidden="true"></span></div>
+          <ol class="steps"><li>Sit comfortably. Let your shoulders drop.</li><li>Breathe in through the nose for 4 counts.</li><li>Breathe out slowly for 6 counts.</li><li>Repeat 6 times. Notice your feet on the floor.</li></ol></div>
+      </div>
+    </section>
+
+    <!-- PRIVACY -->
+    <section class="view" id="v-privacy">
+      <header class="page-head"><h1>Privacy and data</h1><p>You decide what is kept and who sees it.</p></header>
+      <div class="card narrow">
+        <p>Stored on this computer: your daily check-in (mood and loneliness, one entry per day). Chat messages are not stored.</p>
+        <label class="tog block"><input type="checkbox" id="consent"> Allow a short mood summary (never chats) to be shared with a trusted person I choose</label>
+        <p class="note">Sharing is not switched on yet in this prototype. This setting only records your consent for later.</p>
+        <button class="btn ghost" id="wipe">Delete all my stored data</button><span id="wipeMsg" role="status"></span>
+      </div>
+    </section>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

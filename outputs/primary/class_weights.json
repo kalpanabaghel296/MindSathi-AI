@@ -1,0 +1,10 @@
+{
+  "train_negative": 5199.0,
+  "train_positive": 2411.0,
+  "sklearn_class_weight": {
+    "0": 0.7318715137526447,
+    "1": 1.5781833264205725
+  },
+  "xgboost_scale_pos_weight": 2.156366652841145,
+  "note": "Computed from TRAIN only. Apply as class weights during model fitting; no resampling was done on the exported files."
+}

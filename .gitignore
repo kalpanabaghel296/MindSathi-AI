@@ -1,0 +1,11 @@
+# raw inputs (large, never commit)
+data/raw/*
+!data/raw/.gitkeep
+*.zip
+*.pkl
+# generated artefacts (re-create with the pipeline)
+outputs/**/*.parquet
+outputs/**/*.joblib
+__pycache__/
+.ipynb_checkpoints/
+.pytest_cache/

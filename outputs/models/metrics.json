@@ -1,0 +1,140 @@
+{
+  "note": "Screening risk indicator, not a diagnosis.",
+  "chosen_model": "xgboost",
+  "variant": "behaviour_plus_start",
+  "variant_description": "behaviour + context + the person's starting PHQ-9 score",
+  "device": "cuda",
+  "baseline_start_score_only_cv_auc": 0.8813,
+  "cv_results": [
+    {
+      "variant": "behaviour_plus_start",
+      "model": "xgboost",
+      "cv_auc_mean": 0.8867,
+      "cv_auc_std": 0.0023,
+      "cv_pr_auc": 0.7822
+    },
+    {
+      "variant": "behaviour_plus_start",
+      "model": "hist_gb",
+      "cv_auc_mean": 0.8864,
+      "cv_auc_std": 0.0034,
+      "cv_pr_auc": 0.7833
+    },
+    {
+      "variant": "behaviour_plus_start",
+      "model": "logistic",
+      "cv_auc_mean": 0.8846,
+      "cv_auc_std": 0.0035,
+      "cv_pr_auc": 0.7818
+    },
+    {
+      "variant": "behaviour_plus_start",
+      "model": "mlp",
+      "cv_auc_mean": 0.878,
+      "cv_auc_std": 0.0056,
+      "cv_pr_auc": 0.7715
+    },
+    {
+      "variant": "behaviour_only",
+      "model": "xgboost",
+      "cv_auc_mean": 0.757,
+      "cv_auc_std": 0.0172,
+      "cv_pr_auc": 0.5981
+    },
+    {
+      "variant": "behaviour_only",
+      "model": "hist_gb",
+      "cv_auc_mean": 0.7567,
+      "cv_auc_std": 0.0152,
+      "cv_pr_auc": 0.5962
+    },
+    {
+      "variant": "behaviour_only",
+      "model": "logistic",
+      "cv_auc_mean": 0.7561,
+      "cv_auc_std": 0.0195,
+      "cv_pr_auc": 0.5994
+    },
+    {
+      "variant": "behaviour_only",
+      "model": "mlp",
+      "cv_auc_mean": 0.7545,
+      "cv_auc_std": 0.0192,
+      "cv_pr_auc": 0.5997
+    }
+  ],
+  "best_params": {
+    "max_depth": 2,
+    "learning_rate": 0.030052269445481703,
+    "subsample": 0.766755747437954,
+    "colsample_bytree": 0.5395419643173243,
+    "min_child_weight": 1,
+    "reg_lambda": 3,
+    "gamma": 0.5
+  },
+  "test": {
+    "roc_auc": 0.8932,
+    "pr_auc": 0.7877,
+    "brier": 0.1204,
+    "macro_f1_at_moderate_threshold": 0.7777,
+    "baseline_start_score_only_auc": 0.8869,
+    "n_rows": 1626,
+    "positive_rate": 0.3173,
+    "share_by_level": {
+      "low": 0.555,
+      "moderate": 0.05,
+      "high": 0.394
+    },
+    "beats_baseline": true
+  },
+  "fairness_auc_by_group": {
+    "race_asian=0": {
+      "n": 1558,
+      "auc": 0.8911
+    },
+    "race_asian=1": {
+      "n": 68,
+      "auc": 0.9391
+    },
+    "race_black=0": {
+      "n": 1531,
+      "auc": 0.8884
+    },
+    "race_black=1": {
+      "n": 95,
+      "auc": 0.9584
+    },
+    "race_hispanic=0": {
+      "n": 1548,
+      "auc": 0.8911
+    },
+    "race_hispanic=1": {
+      "n": 78,
+      "auc": 0.9285
+    },
+    "race_other=0": {
+      "n": 1563,
+      "auc": 0.89
+    },
+    "race_other=1": {
+      "n": 63,
+      "auc": 0.9214
+    },
+    "race_white=1": {
+      "n": 1413,
+      "auc": 0.8808
+    },
+    "race_white=0": {
+      "n": 213,
+      "auc": 0.9645
+    },
+    "sex=0": {
+      "n": 1244,
+      "auc": 0.8763
+    },
+    "sex=1": {
+      "n": 379,
+      "auc": 0.9219
+    }
+  }
+}

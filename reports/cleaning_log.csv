@@ -1,0 +1,6 @@
+step,n_rows_affected
+"weight below adult minimum -> weight, bmi set to NaN",20
+"weekday: asleep==0 & in-bed==0 -> device non-wear, 3 sleep means set to NaN",1206
+"weekend: asleep==0 & in-bed==0 -> device non-wear, 3 sleep means set to NaN",2041
+"steps_awake_mean < 500 (flag only, kept)",20
+"bmi > 60 (flag only, kept)",178

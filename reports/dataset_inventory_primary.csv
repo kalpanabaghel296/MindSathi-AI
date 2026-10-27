@@ -1,0 +1,3 @@
+dataset,item,kind,rows,columns,notes
+primary,anon_processed_df_parquet,parquet,35694,154,"4948 participants; index = participant_period; aggregates, not raw sensors"
+primary,Feature explanations.tsv,tsv,154,5,feature dictionary; 84 of 154 rows have no description (regression-feature blocks)

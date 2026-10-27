@@ -1,0 +1,27 @@
+check,passed,detail
+no participant in two splits,True,train=2835 val=593 test=608
+train: X rows == y rows == meta rows,True,7610
+train: no NaN/inf in X,True,
+train: no NaN/inf in timing-uncertain extra,True,
+train: columns identical to final_feature_list,True,
+train: targets complete,True,
+val: X rows == y rows == meta rows,True,1630
+val: no NaN/inf in X,True,
+val: no NaN/inf in timing-uncertain extra,True,
+val: columns identical to final_feature_list,True,
+val: targets complete,True,
+test: X rows == y rows == meta rows,True,1626
+test: no NaN/inf in X,True,
+test: no NaN/inf in timing-uncertain extra,True,
+test: columns identical to final_feature_list,True,
+test: targets complete,True,
+no PHQ-9 column in any X file,True,
+sensitive columns not in X,True,
+no identifier columns in X,True,
+no constant columns in train X,True,
+train medians ~0 for scaled columns,True,
+val: positive class present,True,
+test: positive class present,True,
+prediction target is the END score (not start),True,
+preprocessor fitted on training rows only,True,
+refit on train ids reproduces saved preprocessor,True,

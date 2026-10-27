@@ -1,0 +1,5 @@
+dataset,item,kind,rows,columns,notes
+primary,anon_processed_df_parquet,parquet,35694,154,"4948 participants; index = participant_period; aggregates, not raw sensors"
+primary,Feature explanations.tsv,tsv,154,5,feature dictionary; 84 of 154 rows have no description (regression-feature blocks)
+studentlife,archive (2).zip,zip,1984,,"3.04 GB uncompressed; 49 users in sensing; PHQ-9: 46 participants, 84 responses"
+wesad,local WESAD folder (~2.5 GB compressed),folder of S*/S*.pkl,,,NOT accessible in the execution environment - not inspected. Run: python -m src.wesad_preprocessing --audit-only

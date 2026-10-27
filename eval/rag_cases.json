@@ -1,0 +1,68 @@
+{
+ "in_scope": [
+  {
+   "query": "how can I sleep better",
+   "expect_topic": "sleep"
+  },
+  {
+   "query": "kya karun neend nahi aati",
+   "expect_topic": "sleep"
+  },
+  {
+   "query": "breathing exercise for panic",
+   "expect_topic": "breathing"
+  },
+  {
+   "query": "mujhe bahut ghabrahat hoti hai",
+   "expect_topic": "breathing"
+  },
+  {
+   "query": "I feel lonely, what can I do",
+   "expect_topic": "loneliness"
+  },
+  {
+   "query": "akelapan kaise dur karun",
+   "expect_topic": "loneliness"
+  },
+  {
+   "query": "I have no motivation to do anything",
+   "expect_topic": "activity"
+  },
+  {
+   "query": "I keep thinking I am useless",
+   "expect_topic": "thoughts"
+  },
+  {
+   "query": "how to handle exam pressure",
+   "expect_topic": "exam_stress"
+  },
+  {
+   "query": "how do I tell the counsellor what I feel",
+   "expect_topic": "prepare_counsellor"
+  },
+  {
+   "query": "when should I see a doctor for sadness",
+   "expect_topic": "seek_help"
+  },
+  {
+   "query": "free helpline number india",
+   "expect_topic": "tele_manas"
+  },
+  {
+   "query": "my mother passed away and I miss her",
+   "expect_topic": "grief"
+  },
+  {
+   "query": "fight with my father",
+   "expect_topic": "family_conflict"
+  }
+ ],
+ "out_of_scope": [
+  "who won the cricket match yesterday",
+  "write python code to sort a list",
+  "capital of France",
+  "bitcoin price today",
+  "recipe for butter chicken",
+  "how to fix my wifi router"
+ ]
+}
