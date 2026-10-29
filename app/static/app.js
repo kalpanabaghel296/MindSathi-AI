@@ -1,147 +1,78 @@
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const api = async (url, opt) => { const r = await fetch(url, opt); const j = await r.json(); if (!r.ok) throw new Error(j.error || "Something went wrong"); return j; };
-const post = (url, body) => api(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+"use strict";
+const $ = s => document.querySelector(s), esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const J = (p, o) => fetch(p, o).then(r => r.json());
+const TABS = [["home", "Overview"], ["today", "Today"], ["talk", "Saathi"], ["insights", "Risk insights"], ["help", "Help now"], ["privacy", "Privacy"]];
+const nav = $("#nav");
+function go(k) {
+  TABS.forEach(([id]) => $("#v-" + id).classList.toggle("on", id === k));
+  [...nav.children].forEach(b => b.setAttribute("aria-selected", b.dataset.k === k));
+  history.replaceState(null, "", "#" + k);
+}
+TABS.forEach(([k, t]) => { const b = document.createElement("button"); b.textContent = t; b.dataset.k = k; b.onclick = () => go(k); nav.appendChild(b); });
+go(TABS.some(t => t[0] === location.hash.slice(1)) ? location.hash.slice(1) : "home");
 
-/* ---------- navigation ---------- */
-function show(v) {
-  $$(".view").forEach(e => e.classList.toggle("on", e.id === "v-" + v));
-  $$(".nav").forEach(e => e.classList.toggle("on", e.dataset.view === v));
-  if (v === "insights") loadInsights();
-  if (v === "talk") setTimeout(() => $("#msg").focus(), 50);
-  history.replaceState(null, "", "#" + v);
-}
-document.addEventListener("click", e => { const b = e.target.closest("[data-view]"); if (b) show(b.dataset.view); });
+/* Overview */
+$("#flow").innerHTML = [["1 DATA", "Wearable steps and sleep, cleaned and split by person"], ["2 MODEL", "Risk of a PHQ-9 score of 10 or more"], ["3 EXPLAIN", "SHAP shows which factors drove the estimate"], ["4 SUPPORT", "Low, moderate or high leads to different next steps"], ["5 SAATHI", "A safe, listen-first companion"]].map(a => `<li><b>${a[0]}</b>${a[1]}</li>`).join("");
+const pct = x => Math.round(x * 100) + "%";
+J("/api/risk").then(d => {
+  if (!d.ready) { $("#kpis").innerHTML = '<div class="card">Model results are not available yet. Run <code>python -m src.train_advanced</code> once.</div>'; return; }
+  const t = d.metrics.test, bo = d.metrics.cv_results.filter(r => r.variant === "behaviour_only").sort((a, b) => b.cv_auc_mean - a.cv_auc_mean)[0];
+  const k = [[t.roc_auc.toFixed(3), "ROC-AUC on unseen test participants"], [t.baseline_start_score_only_auc.toFixed(3), "Baseline: starting PHQ-9 score only"], [bo ? bo.cv_auc_mean.toFixed(3) : "n/a", "Behavior only (cross-validation)"], [t.n_rows.toLocaleString(), "Test rows, never used for tuning"]];
+  $("#kpis").innerHTML = k.map(x => `<div class="card kpi"><b>${x[0]}</b><span>${x[1]}</span></div>`).join("");
+  $("#honest").innerHTML = `<b>How to read this:</b> the model ${t.beats_baseline ? "edges past" : "does not beat"} the start-score baseline, and behavior alone is clearly weaker. Estimates are risk indicators for people to review, not diagnoses.`;
+  renderInsights(d);
+});
 
-/* ---------- today: check-in ---------- */
-const MOOD = ["Very low", "Low", "Okay", "Good", "Great"], LONE = ["Not at all", "A little", "Some", "Quite", "Very"];
-function scale(id, name, labels) {
-  $("#" + id).insertAdjacentHTML("beforeend", `<div class="opts">${labels.map((l, i) =>
-    `<label><input type="radio" name="${name}" value="${i + 1}"><span><b>${i + 1}</b>${l}</span></label>`).join("")}</div>`);
+/* Today */
+let mood = 0, lon = 0;
+function scale(id, set) { const el = $(id); for (let i = 1; i <= 5; i++) { const b = document.createElement("button"); b.type = "button"; b.textContent = i; b.setAttribute("aria-pressed", "false"); b.onclick = () => { [...el.children].forEach(x => x.setAttribute("aria-pressed", "false")); b.setAttribute("aria-pressed", "true"); set(i); }; el.appendChild(b); } }
+scale("#mood", v => mood = v); scale("#lonely", v => lon = v);
+const h = new Date().getHours(); $("#greet").textContent = (h < 12 ? "Good morning." : h < 18 ? "Good afternoon." : "Good evening.") + " A quick daily check-in. Your trend is compared with your own earlier days.";
+function chart(d) {
+  const e = d.entries; $("#consent").checked = !!d.consent;
+  if (!e.length) { $("#chart").innerHTML = '<p class="mute">No check-ins yet.</p>'; $("#nudge").textContent = ""; return; }
+  const w = 320, ht = 100, x = i => e.length > 1 ? 10 + i * (w - 20) / (e.length - 1) : w / 2, y = v => ht - 10 - (v - 1) * (ht - 20) / 4, ln = k => e.map((p, i) => (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p[k]).toFixed(1)).join(" ");
+  $("#chart").innerHTML = `<svg viewBox="0 0 ${w} ${ht}" width="100%" role="img" aria-label="Mood and loneliness over the last three weeks"><path d="${ln("mood")}" fill="none" stroke="#1F7A6D" stroke-width="3"/><path d="${ln("loneliness")}" fill="none" stroke="#F2B84B" stroke-width="3"/></svg><div class="mute">Teal: mood. Amber: loneliness.</div>`;
+  const t = d.trend; $("#nudge").textContent = t.nudge === "down" ? "This week looks lower than your own usual. Talking to Saathi or someone you trust may help." : t.nudge === "up" ? "This week looks better than your own usual. Nice." : t.mood_change === undefined ? "Add a few more days to see change from your own baseline." : "Your week looks close to your own usual.";
 }
-scale("mood", "mood", MOOD); scale("lonely", "lonely", LONE);
-const h = new Date().getHours();
-$("#greet").textContent = (h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening") + ". How is today?";
+J("/api/checkins").then(chart);
+$("#save").onclick = () => { const s = $("#saved"); if (!mood || !lon) { s.textContent = "Pick both ratings first."; return; } J("/api/checkins", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mood, loneliness: lon }) }).then(d => { if (d.error) { s.textContent = d.error; return; } s.textContent = "Saved."; chart(d); }); };
 
-function drawChart(rows) {
-  const el = $("#chart");
-  if (rows.length < 2) { el.innerHTML = `<p class="empty">Save a check-in on two different days to see your line here.</p>`; return; }
-  const W = 560, H = 190, P = { l: 26, r: 10, t: 10, b: 24 };
-  const days = [...Array(14)].map((_, i) => { const d = new Date(); d.setDate(d.getDate() - 13 + i); return d.toISOString().slice(0, 10); });
-  const x = i => P.l + i * (W - P.l - P.r) / 13, y = v => P.t + (5 - v) * (H - P.t - P.b) / 4;
-  const line = (k, col) => {
-    const pts = days.map((d, i) => { const r = rows.find(r => r.day === d); return r ? [x(i), y(r[k])] : null; });
-    let path = "", pen = false;
-    pts.forEach(p => { if (!p) { pen = false; return; } path += (pen ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); pen = true; });
-    return `<path d="${path}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linejoin="round"/>` + pts.filter(Boolean).map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="${col}"/>`).join("");
-  };
-  const grid = [1, 2, 3, 4, 5].map(v => `<line x1="${P.l}" x2="${W - P.r}" y1="${y(v)}" y2="${y(v)}" stroke="#e3eaec"/><text x="4" y="${y(v) + 4}" font-size="11" fill="#5b6b76">${v}</text>`).join("");
-  const ticks = [0, 6, 13].map(i => `<text x="${x(i)}" y="${H - 6}" font-size="11" fill="#5b6b76" text-anchor="${i === 0 ? "start" : i === 13 ? "end" : "middle"}">${days[i].slice(5)}</text>`).join("");
-  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Mood and loneliness, last 14 days">${grid}${ticks}${line("loneliness", "#8a6fb5")}${line("mood", "#1f7a7a")}</svg>`;
+/* Saathi */
+const log = $("#log"), hist = []; let lang = "en-IN";
+function bubble(c, t) { const d = document.createElement("div"); d.className = "m " + c; d.textContent = t; log.appendChild(d); log.scrollTop = log.scrollHeight; return d; }
+function say(t) { if (!$("#speak").checked || !window.speechSynthesis) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = lang; speechSynthesis.speak(u); }
+function crisisCard(hl) { const d = document.createElement("div"); d.className = "m crisis"; d.innerHTML = `<b>You are not alone.</b> Free, 24x7 help: <a href="tel:${esc(hl.numbers[0])}">${esc(hl.name)} ${esc(hl.numbers[0])}</a>. Emergency: <a href="tel:${esc(hl.emergency)}">${esc(hl.emergency)}</a>.`; log.appendChild(d); log.scrollTop = log.scrollHeight; }
+bubble("bot", "Good to see you. How has your day been? Take your time.");
+["I feel lonely today", "I could not sleep well", "Mujhe thoda udaas lag raha hai", "I just want to talk"].forEach(t => { const b = document.createElement("button"); b.type = "button"; b.textContent = t; b.onclick = () => { $("#msg").value = t; send(); }; $("#chips").appendChild(b); });
+function send() {
+  const i = $("#msg"), text = i.value.trim(); if (!text) return; bubble("me", text); i.value = ""; const wait = bubble("bot", "…");
+  J("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text, history: hist.slice(-10) }) }).then(r => {
+    wait.remove(); if (r.error) { bubble("bot", r.error); return; }
+    bubble(r.level === "crisis" ? "crisis" : "bot", r.reply); if (r.level === "crisis" && r.helplines) crisisCard(r.helplines);
+    hist.push({ role: "user", text }, { role: "bot", text: r.reply }); lang = r.lang === "hi" ? "hi-IN" : "en-IN"; say(r.reply);
+  }).catch(() => { wait.remove(); bubble("bot", "I could not reach the server. Please try again."); });
 }
-function showTrend(t) {
-  const n = $("#trendNote");
-  n.className = "note";
-  if (t.nudge === "down") { n.className = "note trend-down"; n.textContent = "Compared with your own earlier two weeks, this week looks heavier. That’s worth noticing. Talking with Saathi or someone you trust may help, and a counsellor is always an option."; }
-  else if (t.nudge === "up") { n.className = "note trend-up"; n.textContent = "This week looks a little brighter than your earlier two weeks. Nice."; }
-  else if (t.recent_n >= 3 && t.earlier_n >= 3) n.textContent = "Your week looks similar to your earlier two weeks.";
-  else n.textContent = "Saathi compares this week with your own earlier two weeks. It needs about 3 check-ins in each.";
-}
-async function loadCheckins() {
-  const d = await api("/api/checkins"); drawChart(d.entries); showTrend(d.trend); $("#consent").checked = d.consent;
-  const today = d.entries.find(e => e.day === new Date().toISOString().slice(0, 10));
-  if (today) { $(`input[name=mood][value="${today.mood}"]`).checked = true; $(`input[name=lonely][value="${today.loneliness}"]`).checked = true; }
-}
-$("#saveCheck").onclick = async () => {
-  const m = $("input[name=mood]:checked"), l = $("input[name=lonely]:checked"), msg = $("#saveMsg");
-  if (!m || !l) { msg.style.color = "#bf4b45"; msg.textContent = "Pick one option in each row."; return; }
-  try { const d = await post("/api/checkins", { mood: +m.value, loneliness: +l.value }); msg.style.color = ""; msg.textContent = "Saved"; drawChart(d.entries); showTrend(d.trend); }
-  catch (e) { msg.style.color = "#bf4b45"; msg.textContent = e.message; }
-};
-
-/* ---------- talk ---------- */
-const log = $("#log"), hist = [];
-let speakOn = false, voiceLang = "en-IN";
-$("#speak").onchange = e => speakOn = e.target.checked;
-function say(text) { if (!speakOn || !window.speechSynthesis) return; speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = voiceLang; speechSynthesis.speak(u); }
-function bubble(role, text, cls = "") { const d = document.createElement("div"); d.className = `msg ${role} ${cls}`; d.textContent = text; log.append(d); log.scrollTop = log.scrollHeight; return d; }
-function crisisCard() {
-  log.insertAdjacentHTML("beforeend", `<div class="crisis" role="alert"><h3>Please talk to a real person now</h3><div class="btns">
-    <a href="tel:14416">Call Tele-MANAS 14416</a><a href="tel:18008914416">1-800-891-4416</a><a href="tel:112">Emergency 112</a></div></div>`);
-  log.scrollTop = log.scrollHeight;
-}
-async function send(text) {
-  text = text.trim(); if (!text) return;
-  $("#chips").hidden = true; bubble("user", text); $("#msg").value = ""; autosize();
-  const t = bubble("bot", "Saathi is writing…", "typing"); $("#send").disabled = true;
-  try {
-    const r = await post("/api/chat", { message: text, history: hist.slice(-16) });
-    t.remove(); bubble("bot", r.reply); if (r.level === "crisis") crisisCard();
-    hist.push({ role: "user", text }, { role: "bot", text: r.reply });
-    voiceLang = r.lang === "hi" ? "hi-IN" : "en-IN"; say(r.reply);
-  } catch (e) { t.remove(); bubble("bot", "I couldn’t reach the server. If you need help right now, call 14416 or 112."); }
-  $("#send").disabled = false; $("#msg").focus();
-}
-bubble("bot", "Hello, I’m Saathi, an AI companion. I’m here to listen, not to diagnose or give medical advice. If you ever feel unsafe, I’ll point you to real people. What would you like to talk about?");
-$("#send").onclick = () => send($("#msg").value);
-$("#msg").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(e.target.value); } });
-const autosize = () => { const t = $("#msg"); t.style.height = "auto"; t.style.height = Math.min(t.scrollHeight, 120) + "px"; };
-$("#msg").addEventListener("input", autosize);
-$("#chips").addEventListener("click", e => { if (e.target.tagName === "BUTTON") send(e.target.textContent); });
+$("#send").onclick = send; $("#msg").addEventListener("keydown", e => { if (e.key === "Enter") send(); });
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (SR) {
-  const mic = $("#mic"); mic.hidden = false; let rec;
-  mic.onclick = () => {
-    if (rec) { rec.stop(); return; }
-    rec = new SR(); rec.lang = voiceLang; rec.interimResults = false;
-    rec.onresult = e => { $("#msg").value = e.results[0][0].transcript; autosize(); };
-    rec.onend = () => { mic.classList.remove("rec"); mic.textContent = "Mic"; rec = null; };
-    mic.classList.add("rec"); mic.textContent = "Listening"; rec.start();
-  };
+if (SR) { $("#mic").onclick = () => { const r = new SR(); r.lang = lang; r.onresult = e => { $("#msg").value = e.results[0][0].transcript; send(); }; r.start(); }; } else $("#mic").hidden = true;
+
+/* Risk insights */
+const LV = { low: "Low", moderate: "Moderate", high: "High" };
+function renderInsights(d) {
+  const th = d.thresholds || {}, mp = (th.moderate || .27) * 100, hp = (th.high || .42) * 100;
+  let html = d.users.map(u => { const mx = Math.max(...u.factors.map(f => f.size), .001), s = d.support[u.level];
+    return `<article class="card"><div class="uh"><b>${esc(u.label)}</b><span class="pill ${u.level}">${LV[u.level]} risk</span></div>
+<div>Estimated chance of a PHQ-9 score of 10 or more: <b>${Math.round(u.probability * 100)}%</b></div><div class="gauge" style="--m:${mp}%;--h:${hp}%"><i style="left:${Math.min(99, u.probability * 100)}%"></i></div>
+${u.factors.map(f => `<div class="f"><span>${esc(f.name)}<br><span class="mute">${f.direction} the estimate</span></span><div><s class="${f.direction === "raises" ? "" : "dn"}" style="width:${Math.max(8, f.size / mx * 100)}%"></s></div></div>`).join("")}
+<p><b>${esc(s.title)}</b></p><ul class="act">${s.actions.map(a => `<li>${esc(a)}</li>`).join("")}</ul></article>`; }).join("");
+  const fg = d.metrics && d.metrics.fairness_auc_by_group;
+  if (fg && typeof fg === "object") { const rows = Object.entries(fg).map(([k, v]) => { const n = typeof v === "number" ? v : (v && (v.roc_auc ?? v.auc)); return typeof n === "number" ? `<tr><td>${esc(k)}</td><td>${n.toFixed(3)}</td></tr>` : ""; }).join(""); if (rows) html += `<article class="card"><h3>Fairness: ROC-AUC by group</h3><table><tbody>${rows}</tbody></table><p class="mute">Compare groups, and treat small groups with care.</p></article>`; }
+  $("#insights").innerHTML = html;
 }
 
-/* ---------- insights ---------- */
-const LVL = { low: "Low", moderate: "Moderate", high: "High" };
-async function loadInsights() {
-  const box = $("#insights"), d = await api("/api/risk");
-  if (!d.ready) {
-    box.innerHTML = `<div class="card empty-state narrow"><h2>The risk model has not been trained yet</h2>
-      <p>This page shows results for held-out test participants, replayed as simulated users. To create them, run in the project folder:</p>
-      <p><code>python -m src.train_models</code></p><p class="note">It reads the prepared train, validation and test files, trains the models, calibrates the probabilities, and writes <b>outputs/models/</b>. Then reload this page.</p></div>`;
-    return;
-  }
-  const t = d.metrics?.test || {};
-  const M = d.metrics || {};
-  const m = `<div class="card metrics"><h2>How well did the model do on unseen participants?</h2><table>
-    <tr><th>Chosen model</th><td>${esc(M.chosen_model)}</td></tr>
-    <tr><th>Inputs</th><td>${esc(M.variant_description || "behaviour and context data")}</td></tr>
-    <tr><th>ROC-AUC (test)</th><td>${t.roc_auc} <span class="note">vs ${t.baseline_start_score_only_auc} using only the starting questionnaire score</span></td></tr>
-    <tr><th>Probability error (Brier)</th><td>${t.brier} <span class="note">lower is better</span></td></tr></table>
-    <p class="note">${t.beats_baseline ? "The model beats the starting-score-only baseline." : "The model does not beat the starting-score-only baseline, so behaviour data adds little beyond the person’s own earlier score."}
-    Explanations: ${esc(d.method || "not available")}. Factors show what pushed a score up or down; they are not causes.</p></div>`;
-  const cards = d.users.map(u => {
-    const mx = Math.max(...u.factors.map(f => f.size), 0.001), s = d.support[u.level];
-    const mp = Math.round((d.thresholds?.moderate ?? 0.3) * 100), hp = Math.round((d.thresholds?.high ?? 0.6) * 100);
-    return `<article class="card"><div class="u-head"><b>${esc(u.label)}</b><span class="pill ${u.level}">${LVL[u.level]} risk</span></div>
-      <div>Estimated chance of a PHQ-9 score of 10 or more: <b>${Math.round(u.probability * 100)}%</b></div>
-      <div class="gauge" style="--m:${mp}%;--h:${hp}%"><i style="left:${Math.min(99, u.probability * 100)}%"></i></div>
-      <div class="gl"><span>0%</span><span>100%</span></div>
-      <h3 style="font-size:.9rem;margin:12px 0 4px">What mattered most</h3>
-      ${u.factors.map(f => `<div class="f"><span>${esc(f.name)} <span class="note">${f.direction} the estimate</span></span><s class="${f.direction === "raises" ? "up" : "dn"}" style="width:${Math.max(8, f.size / mx * 100)}%"></s></div>`).join("") || `<p class="note">No factor breakdown for this model type.</p>`}
-      <div class="sup"><b>${esc(s.title)}</b><ul>${s.actions.map(a => `<li>${esc(a)}</li>`).join("")}</ul></div>
-      <p class="note" style="margin-top:10px">Questionnaire later: ${u.questionnaire_end_for_evaluation_only} (evaluation only, not shown to the model)</p></article>`;
-  }).join("");
-  box.innerHTML = m + `<div class="cards">${cards}</div>`;
-}
-
-/* ---------- privacy ---------- */
-$("#consent").onchange = e => post("/api/consent", { on: e.target.checked });
-$("#wipe").onclick = async () => {
-  if (!confirm("Delete all stored check-ins and settings? This cannot be undone.")) return;
-  await api("/api/data", { method: "DELETE" }); $("#wipeMsg").textContent = "Deleted"; loadCheckins();
-};
-
-loadCheckins();
-const first = (location.hash || "").slice(1);
-show(document.getElementById("v-" + first) ? first : "today");
+/* Help + Privacy */
+J("/api/helplines").then(h => { $("#helpbox").innerHTML = `<div class="card"><h3>Immediate help</h3><p><b>${esc(h.name)}: <a href="tel:${esc(h.numbers[0])}">${esc(h.numbers[0])}</a></b><br>${esc(h.note)}</p><p><b>Emergency: <a href="tel:${esc(h.emergency)}">${esc(h.emergency)}</a></b></p></div>
+<div class="card"><h3>Next steps</h3><ol><li>Tell one trusted person how you feel.</li><li>Book a visit with a counsellor or doctor.</li><li>Take your weekly mood summary with you.</li></ol></div>`; });
+$("#consent").onchange = e => J("/api/consent", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ on: e.target.checked }) });
+$("#wipe").onclick = () => { if (!confirm("Delete all check-ins and settings?")) return; fetch("/api/data", { method: "DELETE" }).then(() => { $("#wiped").textContent = "Deleted."; J("/api/checkins").then(chart); }); };
